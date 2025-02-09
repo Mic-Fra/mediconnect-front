@@ -1,0 +1,25 @@
+.textWrapper {
+  display: inline-block;
+  color: #007BFF;
+  font-size: 48px;
+  text-align: center;
+  
+  /* Ensure the rotation happens around the container's center */
+  transform-origin: center;
+  
+  /* Apply the animation directly when the page loads */
+  animation: moveAndRotate 10s ease-in-out infinite;
+}
+
+
+
+/* Rotation and Movement animation */
+@keyframes moveAndRotate {
+  0% {
+    transform: rotate(0deg) translateX(0) translateY(0); /* Initial position */
+  }
+  
+  100% {
+    transform: rotate(360deg) translateX(0) translateY(0); /* Back to the original position */
+  }
+}
