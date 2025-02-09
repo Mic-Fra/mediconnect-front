@@ -42,11 +42,6 @@ export default function DocRegister(){
         other: [],
     });
     
-      
-
-      
-      
-
       const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -185,14 +180,7 @@ export default function DocRegister(){
         { id: 32, name: 'Geriatrics' },
         { id: 33, name: 'Allergy and Immunology' }
     ] 
-    
-      // State to store selected items (ids)
-      const [selectedGeneral, setSelectedGeneral] = useState<number[]>([]);
-      const [selectedSurgical, setSelectedSurgicall] = useState<number[]>([]);
-      const [selectedMedical, setSelectedMedical] = useState<number[]>([]);
-      const [selectedPediatric, setSelectedPediatric] = useState<number[]>([]);
-      const [selectedOther, setSelectedOther] = useState<number[]>([]);
-    
+
       // Handle checkbox selection
       const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, itemName: string, category: string) => {
         const updatedSelections = e.target.checked
@@ -204,8 +192,6 @@ export default function DocRegister(){
             [category]: updatedSelections, // Update the correct category array with names
         }));
     };
-    
-    
     
     return(
         <Layout>

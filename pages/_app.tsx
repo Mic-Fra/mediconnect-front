@@ -3,10 +3,8 @@ import Layout from "@/components/Layout";
 import "@/styles/globals.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  return (
-    
-      <Component {...pageProps} />
-    
+  return ( 
+      <Component {...pageProps} />   
   );
 };
 

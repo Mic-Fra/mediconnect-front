@@ -51,54 +51,48 @@ export default function Login() {
                 Sign in to your account
               </h2>
             </div>
-
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
-              <div className="bg-white px-6 py-12 shadow rounded-lg sm:px-12">
-                
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                      Email address
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="block w-full rounded-md border px-3 py-2 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-indigo-600 sm:text-sm"
-                      />
-                    </div>
+              <div className="bg-white px-6 py-12 shadow rounded-lg sm:px-12">                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-900">
+                    Email address
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="block w-full rounded-md border px-3 py-2 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-indigo-600 sm:text-sm"
+                    />
                   </div>
-
-                  <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-900">
-                      Password
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="block w-full rounded-md border px-3 py-2 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-indigo-600 sm:text-sm"
-                      />
-                    </div>
+                </div>
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-900">
+                    Password
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="block w-full rounded-md border px-3 py-2 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-indigo-600 sm:text-sm"
+                    />
                   </div>
-
-                  
+                </div>
+                <div className="mt-2">
                   <button onClick={handleLogin}
                   className="w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus:ring-2 focus:ring-indigo-600"
                   >Login</button>
-
-                  {error && <p>{error}</p>}
-
-
+                </div>                  
+                {error && <p>{error}</p>}
                 <div className="mt-4 text-center text-sm">
                   <Link href="#" className="text-indigo-600 hover:text-indigo-800">
                     Forgot password?

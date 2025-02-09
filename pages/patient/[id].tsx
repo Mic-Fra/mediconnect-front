@@ -49,24 +49,19 @@ const PatientDetail = () => {
               Back
           </button>
       </div>
-      <div className="w-full max-w-4xl flex flex-col gap-10 mx-auto p-4">
-        
+      <div className="w-full max-w-4xl flex flex-col gap-10 mx-auto p-4">    
         <div className="bg-cyan-100 opacity-80 p-6 rounded-lg shadow-lg">
-          
-          
-
           <div className="flex gap-4 mb-4 justify-around">
-          <div className=" flex flex-col justify-center">
-              <h1 className="text-2xl text-center font-bold mb-4">
-              {patient.firstname} {patient.lastname} 
-              </h1>
-              <img
-              src={`http://localhost:3000${patient.upimagePreview}`}
-              alt="Profile"
-              className="w-60 h-60 rounded-full object-cover"
-            />
-          </div>
-            
+            <div className=" flex flex-col justify-center">
+                <h1 className="text-2xl text-center font-bold mb-4">
+                {patient.firstname} {patient.lastname} 
+                </h1>
+                <img
+                src={`http://localhost:3000${patient.upimagePreview}`}
+                alt="Profile"
+                className="w-60 h-60 rounded-full object-cover"
+              />
+            </div>          
             <div className="flex flex-col justify-center gap-[10px]">
               <p><strong>Birthdate:</strong> {patient.birthdate}</p>
               <div className="flex flex-row gap-[20px]">
@@ -85,13 +80,10 @@ const PatientDetail = () => {
               <p><strong>Emergency Contact Name:</strong> {patient.emergfirstname} {patient.emerglastname}</p>
               <p><strong>Relationship:</strong> {patient.relationship}</p>
               <p><strong>Contact Number :</strong> {patient.emergnumber}</p>
-              
-
             </div>
           </div>
         </div>
-      </div>
-      
+      </div>  
     </div>
   );
 };

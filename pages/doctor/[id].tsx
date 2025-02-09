@@ -51,8 +51,7 @@ const DoctorDetail = () => {
           Back
         </button>
       </div>
-      <div className="w-full flex flex-col gap-10 max-w-4xl mx-auto p-4">
-        
+      <div className="w-full flex flex-col gap-10 max-w-4xl mx-auto p-4">  
         <div className="bg-cyan-100 opacity-80 p-6 rounded-lg shadow-lg">
           <div className="flex flex-row gap-4 mb-4 justify-around">
             <div className="flex flex-col justify-center">
@@ -64,8 +63,7 @@ const DoctorDetail = () => {
                 alt="Profile"
                 className="w-60 h-60 rounded-full object-cover"
               />
-            </div>
-            
+            </div>          
             <div className="flex flex-col justify-center gap-[5px]">
               <p><strong>Birthdate:</strong> {doctor?.birthdate}</p>
               <p><strong>Email:</strong> {doctor?.email}</p>
@@ -93,8 +91,7 @@ const DoctorDetail = () => {
             </div>
           </div>
         </div>
-      </div>
-      
+      </div>    
     </div>
   );
 };

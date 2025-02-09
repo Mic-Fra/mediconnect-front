@@ -148,9 +148,7 @@ const DoctorDashboard = () => {
           className="p-2 border rounded-md flex-1"
         />
       </div>
-
       {error && <div className="text-red-500">{error}</div>}
-
       {loading ? (
         <div className="text-center">Loading...</div>
       ) : (
@@ -243,8 +241,7 @@ const DoctorDashboard = () => {
               Next
             </button>
           </div>
-        </div>
-        
+        </div>     
       )}
     </div>
   );
