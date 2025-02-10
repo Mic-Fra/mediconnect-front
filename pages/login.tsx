@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuthStore } from "@/store/authStore";
-import toast from "react-hot-toast";
 import Layout from "@/components/Layout";
 import Link from "next/link";
 import axios from "axios";
-import Cookies from 'js-cookie';
 
 export default function Login() {
   const login = useAuthStore((state) => state.login);

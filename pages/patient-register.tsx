@@ -238,9 +238,6 @@ export default function PatientRegister(){
                                     placeholder="MM-DD-YYYY"
                                     className="border rounded-lg p-2 w-full"
                                     />
-                                    <div className="text-left text-sm">
-                                        Date
-                                    </div>
                                 </div> 
                             </div> 
                             <div className="flex flex-col flex-1 gap-[10px]">
@@ -343,9 +340,6 @@ export default function PatientRegister(){
                                     onChange={handleChange}
                                     className="border rounded-lg p-2 w-full"
                                     />
-                                <div className="text-sm text-left">
-                                    example@example.com
-                                </div>
                             </div>
                         </div>
                         <div className="flex flex-col py-[40px] gap-[10px]">

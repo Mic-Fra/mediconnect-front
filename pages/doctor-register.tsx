@@ -275,9 +275,6 @@ export default function DocRegister(){
                         placeholder="MM-DD-YYYY"
                         className="border rounded-lg p-2 w-full"
                         />
-                        <div className="text-sm text-left">
-                            Date
-                        </div>
                     </div>
                     <div className="flex flex-col grid-1 gap-[10px]">
                         <div className="text-lg font-bold text-center md:text-left">
@@ -288,11 +285,9 @@ export default function DocRegister(){
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        placeholder="example@example.com"
                         className="border rounded-lg p-2 w-full"
-                        />
-                        <div className="text-sm text-left">
-                            example@example.com
-                        </div>
+                        />                       
                     </div>
                     <div className="flex flex-col grid-1 gap-[10px]">
                         <div className="text-lg font-bold text-center md:text-left">
@@ -324,6 +319,7 @@ export default function DocRegister(){
                                 value="Male"
                                 checked={formData.gender === 'Male'}
                                 onChange={handleChange}
+                                className="mr-2"
                             />
                                 Male
                         </div>
@@ -334,6 +330,7 @@ export default function DocRegister(){
                                 value="Female"
                                 checked={formData.gender === 'Female'}
                                 onChange={handleChange}
+                                className="mr-2"
                             />
                                 Female
                         </div>
