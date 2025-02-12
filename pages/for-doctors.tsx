@@ -5,9 +5,13 @@
   import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
   import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
   import DoctorCard from "../components/DoctorCard";
-  import { useEffect, useState } from "react";
+  import { useEffect, useState, useCallback } from "react";
   import axios from "axios";
   import Layout from "@/components/Layout";
+  import { debounce } from "lodash";
+  import Select from "react-select";
+  
+
 
   const montserrat = Montserrat({
     subsets: ["latin"],
@@ -27,12 +31,69 @@
     isActive: boolean;
   }
 
+  const general = [
+    { id: 1, name: "General Practitioner (GP) / Family Medicine" },
+    { id: 2, name: "Internal Medicine" },
+  ];
+  
+  const surgical = [
+    { id: 3, name: "General Surgery" },
+    { id: 4, name: "Orthopedic Surgery" },
+    { id: 5, name: "Cardiothoracic Surgery" },
+    { id: 6, name: "Neurosurgery" },
+    { id: 7, name: "Plastic Surgery" },
+    { id: 8, name: "Pediatric Surgery" },
+  ];
+  
+  const medical = [
+    { id: 9, name: "Cardiology" },
+    { id: 10, name: "Neurology" },
+    { id: 11, name: "Endocrinology" },
+    { id: 12, name: "Pulmonology" },
+    { id: 13, name: "Gastroenterology" },
+    { id: 14, name: "Rheumatology" },
+    { id: 15, name: "Infectious Disease" },
+    { id: 16, name: "Hematology" },
+    { id: 17, name: "Oncology" },
+    { id: 18, name: "Nephrology" },
+    { id: 19, name: "Dermatology" },
+    { id: 20, name: "Ophthalmology" },
+    { id: 21, name: "Psychiatry" },
+    { id: 22, name: "Urology" },
+    { id: 23, name: "Obstetrics and Gynecology (OB/GYN)" },
+  ];
+  
+  const pediatric = [
+    { id: 24, name: "Pediatrics" },
+    { id: 25, name: "Pediatric Cardiology" },
+    { id: 26, name: "Pediatric Neurology" },
+  ];
+  
+  const other = [
+    { id: 27, name: "Anesthesiology" },
+    { id: 28, name: "Radiology" },
+    { id: 29, name: "Pathology" },
+    { id: 30, name: "Rehabilitation Medicine (Physiatry)" },
+    { id: 31, name: "Emergency Medicine" },
+    { id: 32, name: "Geriatrics" },
+    { id: 33, name: "Allergy and Immunology" },
+  ];
+  
+  // Grouped Specialty Options
+  const specialtyOptions = [
+    { label: "General", options: general },
+    { label: "Surgical", options: surgical },
+    { label: "Medical", options: medical },
+    { label: "Pediatric", options: pediatric },
+    { label: "Other", options: other },
+  ];
+
   export default function ForDoctors() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>(''); // For name search
-    const [specialtyQuery, setSpecialtyQuery] = useState<string>(''); // For specialty search
+    const [selectedSpecialties, setSelectedSpecialties] = useState<any[]>([]); // Specialty search
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
@@ -45,7 +106,10 @@
         const response = await axios.get('http://localhost:3000/users/search-isactive', {
           params: {
             name: searchQuery || undefined,
-            specialty: specialtyQuery || undefined,
+            specialty:
+              selectedSpecialties.length > 0
+                ? selectedSpecialties.map((s) => s.name).join(",")
+                : undefined,
             page: currentPage,
             limit: 4,
           },
@@ -72,9 +136,22 @@
     };
 
     // Fetch users when searchQuery, specialtyQuery, or currentPage changes
+    const debouncedSearch = useCallback(
+      debounce(() => {
+        fetchUsers();
+      }, 500), 
+      [searchQuery, JSON.stringify(selectedSpecialties)] // Dependencies
+    );
+
     useEffect(() => {
       fetchUsers();
-    }, [searchQuery, specialtyQuery, currentPage]);
+    }, [currentPage]);
+  
+    // Fetch on dependency change
+    useEffect(() => {
+      debouncedSearch();
+      return () => debouncedSearch.cancel(); // Cleanup on unmount
+    }, [searchQuery, selectedSpecialties, debouncedSearch]);
 
     const handlePageChange = (page: number) => {
       if (page > 0 && page <= totalPages) {
@@ -102,12 +179,16 @@
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="p-2 border rounded-md flex-1"
               />
-              <input
-                type="text"
-                placeholder="Search by specialty"
-                value={specialtyQuery}
-                onChange={(e) => setSpecialtyQuery(e.target.value)}
+              <Select
+                isMulti
+                options={specialtyOptions}
+                getOptionLabel={(e) => e.name}
+                getOptionValue={(e) => e.id.toString()}
+                onChange={(selected) =>
+                  setSelectedSpecialties(selected ? selected : [])
+                }
                 className="p-2 border rounded-md flex-1"
+                placeholder="Select specialties..."
               />
             </div>
             <div className="grid grid-cols-4 gap-6">

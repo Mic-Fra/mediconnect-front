@@ -1,9 +1,17 @@
-import { GetServerSideProps } from 'next';
-import axios from 'axios';
+import { GetServerSideProps } from "next";
+import axios from "axios";
 import Header1 from "../components/Header1";
-import cookie from 'cookie';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import cookie from "cookie";
+import { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
+import { debounce } from "lodash";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
+
+// ✅ Prevent SSR issues with react-select
+const Select = dynamic(() => import("react-select"), { ssr: false })
+
 
 // Server-side authentication check
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -46,22 +54,82 @@ interface User {
   email: string;
   phone: string;
   upimagePreview: string;
+  isActive: boolean;
   general?: string[];
   surgical?: string[];
   medical?: string[];
   pediatric?: string[];
   other?: string[];
-  isActive: boolean;
 }
+
+const general = [
+  { id: 1, name: "General Practitioner (GP) / Family Medicine" },
+  { id: 2, name: "Internal Medicine" },
+];
+
+const surgical = [
+  { id: 3, name: "General Surgery" },
+  { id: 4, name: "Orthopedic Surgery" },
+  { id: 5, name: "Cardiothoracic Surgery" },
+  { id: 6, name: "Neurosurgery" },
+  { id: 7, name: "Plastic Surgery" },
+  { id: 8, name: "Pediatric Surgery" },
+];
+
+const medical = [
+  { id: 9, name: "Cardiology" },
+  { id: 10, name: "Neurology" },
+  { id: 11, name: "Endocrinology" },
+  { id: 12, name: "Pulmonology" },
+  { id: 13, name: "Gastroenterology" },
+  { id: 14, name: "Rheumatology" },
+  { id: 15, name: "Infectious Disease" },
+  { id: 16, name: "Hematology" },
+  { id: 17, name: "Oncology" },
+  { id: 18, name: "Nephrology" },
+  { id: 19, name: "Dermatology" },
+  { id: 20, name: "Ophthalmology" },
+  { id: 21, name: "Psychiatry" },
+  { id: 22, name: "Urology" },
+  { id: 23, name: "Obstetrics and Gynecology (OB/GYN)" },
+];
+
+const pediatric = [
+  { id: 24, name: "Pediatrics" },
+  { id: 25, name: "Pediatric Cardiology" },
+  { id: 26, name: "Pediatric Neurology" },
+];
+
+const other = [
+  { id: 27, name: "Anesthesiology" },
+  { id: 28, name: "Radiology" },
+  { id: 29, name: "Pathology" },
+  { id: 30, name: "Rehabilitation Medicine (Physiatry)" },
+  { id: 31, name: "Emergency Medicine" },
+  { id: 32, name: "Geriatrics" },
+  { id: 33, name: "Allergy and Immunology" },
+];
+
+// Grouped Specialty Options
+const specialtyOptions = [
+  { label: "General", options: general },
+  { label: "Surgical", options: surgical },
+  { label: "Medical", options: medical },
+  { label: "Pediatric", options: pediatric },
+  { label: "Other", options: other },
+];
+
 
 const DoctorDashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>(''); // Name search
-  const [specialtyQuery, setSpecialtyQuery] = useState<string>(''); // Specialty search
+  const [searchQuery, setSearchQuery] = useState(""); // Name search
+  const [selectedSpecialties, setSelectedSpecialties] = useState<any[]>([]); // Specialty search
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+
+
 
   // Fetch users
   const fetchUsers = async () => {
@@ -72,7 +140,10 @@ const DoctorDashboard = () => {
       const response = await axios.get('http://localhost:3000/users/search', {
         params: {
           name: searchQuery || undefined,
-          specialty: specialtyQuery || undefined,
+          specialty:
+            selectedSpecialties.length > 0
+              ? selectedSpecialties.map((s) => s.name).join(",")
+              : undefined,
           page: currentPage,
           limit: 5,
         },
@@ -87,10 +158,21 @@ const DoctorDashboard = () => {
     }
   };
 
-  // Fetch on dependency change
+  const debouncedSearch = useCallback(
+    debounce(() => {
+      fetchUsers();
+    }, 500),
+    [searchQuery, JSON.stringify(selectedSpecialties)] // Fix: Convert selectedSpecialties to string to avoid unnecessary re-renders
+  );
+
   useEffect(() => {
     fetchUsers();
-  }, [searchQuery, specialtyQuery, currentPage]);
+  }, [currentPage]);
+
+  useEffect(() => {
+    debouncedSearch();
+    return () => debouncedSearch.cancel();
+  }, [searchQuery, selectedSpecialties, debouncedSearch]);
 
   const toggleActiveStatus = async (userId: string) => {
     try {
@@ -115,6 +197,8 @@ const DoctorDashboard = () => {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
       await axios.delete(`http://localhost:3000/users/${userId}`);
       alert('User deleted successfully.');
+      fetchUsers();
+
     } catch (err) {
       alert('Failed to delete user.');
     }
@@ -140,12 +224,16 @@ const DoctorDashboard = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="p-2 border rounded-md flex-1"
         />
-        <input
-          type="text"
-          placeholder="Search by specialty"
-          value={specialtyQuery}
-          onChange={(e) => setSpecialtyQuery(e.target.value)}
+        <Select
+          isMulti
+          options={specialtyOptions}
+          getOptionLabel={(e) => e.name}
+          getOptionValue={(e) => e.id.toString()}
+          onChange={(selected) =>
+            setSelectedSpecialties(selected ? selected : [])
+          }
           className="p-2 border rounded-md flex-1"
+          placeholder="Select specialties..."
         />
       </div>
       {error && <div className="text-red-500">{error}</div>}

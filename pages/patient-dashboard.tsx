@@ -2,8 +2,9 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import Header1 from "../components/Header1";
 import cookie from 'cookie';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import { debounce } from "lodash";
 
 // Server-side authentication check
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -80,9 +81,22 @@ const PatientDashboard = () => {
     }
   };
 
+  const debouncedSearch = useCallback(
+    debounce(() => {
+      fetchUsers();
+    }, 500), 
+    [searchQuery] // Dependencies
+  );
+
   useEffect(() => {
     fetchUsers();
-  }, [searchQuery, currentPage]);
+  }, [currentPage]);
+
+  // Fetch on dependency change
+  useEffect(() => {
+    debouncedSearch();
+    return () => debouncedSearch.cancel(); // Cleanup on unmount
+  }, [searchQuery, debouncedSearch]);
 
   const toggleActiveStatus = async (userId: string) => {
     try {
@@ -105,6 +119,8 @@ const PatientDashboard = () => {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
       await axios.delete(`http://localhost:3000/patients/${userId}`);
       alert('User deleted successfully.');
+      fetchUsers();
+
     } catch (err) {
       alert('Failed to delete user.');
     }

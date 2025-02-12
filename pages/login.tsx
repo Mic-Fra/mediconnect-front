@@ -9,35 +9,58 @@ export default function Login() {
   const login = useAuthStore((state) => state.login);
   const token = useAuthStore((state) => state.token);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('michael.franklin.dev.312@gmail.com');
-  const [password, setPassword] = useState('1q2w3e4r!@#$Q');
+  const [email, setEmail] = useState("michael.franklin.dev.312@gmail.com");
+  const [password, setPassword] = useState("1q2w3e4r!@#$Q");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false); // Prevents multiple redirects
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const storedToken = useAuthStore.getState().token || sessionStorage.getItem("access_token");
+    
+    if (storedToken && !isRedirecting) {
+      setIsRedirecting(true);
+      router.replace("/doctor-dashboard");
+    }
+
+    setIsCheckingAuth(false);
+  }, [router, isRedirecting]);
+
+  if (isCheckingAuth) return <div className="h-screen flex justify-center items-center">Checking authentication...</div>;
 
   const handleLogin = async () => {
+    setLoading(true);
+    setError(null);
+
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', {
-        email,
-        password,
-      }, { withCredentials: true });
-  
-      // const { access_token, refresh_token } = response.data;
-  
-      // console.log('here', response, access_token, refresh_token)
-  
-      // // Set the tokens in cookies, without the httpOnly flag on the client-side
-      // // Note: This is just for example, don't use this for sensitive data like access tokens in real apps.
-      // Cookies.set('access_token', access_token); 
-      // Cookies.set('refresh_token', refresh_token);
-  
-      // Redirect to the dashboard after a successful login
-      router.push('/doctor-dashboard');
-    } catch (err) {
-      setError('Invalid email or password');
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
+
+      console.log("Login successful:", response.data);
+
+      const token = response.data.access_token;
+
+      // ✅ Store token in Zustand first
+      login(token);
+
+      // ✅ Store token in sessionStorage (not localStorage)
+      sessionStorage.setItem("access_token", token);
+
+      // ✅ Redirect to doctor dashboard
+      router.replace("/doctor-dashboard");
+    } catch (err: any) {
+      console.error("Login error:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
-  
-  
 
   return (
     <Layout>
@@ -50,7 +73,7 @@ export default function Login() {
               </h2>
             </div>
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
-              <div className="bg-white px-6 py-12 shadow rounded-lg sm:px-12">                
+              <div className="bg-white px-6 py-12 shadow rounded-lg sm:px-12">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-900">
                     Email address
@@ -86,13 +109,17 @@ export default function Login() {
                   </div>
                 </div>
                 <div className="mt-2">
-                  <button onClick={handleLogin}
-                  className="w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus:ring-2 focus:ring-indigo-600"
-                  >Login</button>
-                </div>                  
-                {error && <p>{error}</p>}
+                  <button
+                    onClick={handleLogin}
+                    disabled={loading}
+                    className="w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus:ring-2 focus:ring-indigo-600"
+                  >
+                    {loading ? "Logging in..." : "Login"}
+                  </button>
+                </div>
+                {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
                 <div className="mt-4 text-center text-sm">
-                  <Link href="#" className="text-indigo-600 hover:text-indigo-800">
+                  <Link href="#" className="text-indigo-600 hover:text-indigo-800" prefetch={false}>
                     Forgot password?
                   </Link>
                 </div>

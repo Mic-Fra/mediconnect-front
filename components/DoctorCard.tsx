@@ -33,7 +33,7 @@ export default function UserCard({
   return (
     <Link href="">
       <div
-        className={`${montserrat.className} max-w-full min-h-[550px] lg:min-h-[450px] flex flex-col bg-gray-800 bg-opacity-90 p-6 rounded-lg shadow-md hover:shadow-lg transition-all`}
+        className={`${montserrat.className} max-w-full min-h-[550px] lg:min-h-[450px] flex flex-col bg-gray-800 bg-opacity-80 p-6 rounded-lg shadow-md hover:shadow-lg transition-all`}
       >
         {/* Image Section */}
         <div className="w-full flex justify-center mb-4 ">
