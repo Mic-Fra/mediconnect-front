@@ -1,11 +1,11 @@
 <div align="center">
-  <h1 style="margin: 0;">Nest-Next</h1>
-  <p>Render Module to add Nextjs support for Nestjs.</p>
+  <h1 style="margin: 0;">Medi-Connect</h1>
+  <p></p>
   <a href="https://www.npmjs.com/package/nest-next"><img src="https://img.shields.io/npm/v/nest-next?style=flat-square" alt="npm"></a> <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a> <a href="https://github.com/kyle-mccarthy/nest-next/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="GitHub license"></a></p>
 
 </div>
 
-> nest-next provides a nestjs module to integrate next.js into a nest.js application, it allows the rendering of next.js pages via nestjs controllers and providing initial props to the page as well.
+> A NextJS frontend and NestJS backend. Database is PostgreSql.
 
 <!-- vim-markdown-toc GFM -->
 
