@@ -15,6 +15,7 @@
 - [Installation](#installation)
 - [Peer Dependencies](#peer-dependencies)
 - [Usage](#usage)
+- [Tech Stack](#techstack)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -54,7 +55,7 @@ npm run build
 npm start
 ```
 
-## 🏗 Tech Stack
+### Tech Stack
 - **Frontend:** Next.js, Tailwind CSS, ShadCN
 - **State Management:** Zustand
 - **API:** tRPC
