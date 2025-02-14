@@ -15,7 +15,7 @@
 - [Installation](#installation)
 - [Peer Dependencies](#peer-dependencies)
 - [Usage](#usage)
-- [Tech Stack](#techstack)
+- [Tech Stack](#tech-stack)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
