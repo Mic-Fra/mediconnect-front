@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+
 interface AuthState {
   token: string | null;
   login: (token: string) => void;

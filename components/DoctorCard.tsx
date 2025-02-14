@@ -1,6 +1,5 @@
 "use client";
 import { Montserrat } from "next/font/google";
-import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 
